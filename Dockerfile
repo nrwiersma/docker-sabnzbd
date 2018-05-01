@@ -1,7 +1,7 @@
 FROM alpine:3.6
 MAINTAINER Nicholas Wiersma <nick@wiersma.co.za>
 
-ENV VERSION 2.3.2
+ENV VERSION 2.3.3
 ENV CHEETAH 2.4.4
 ENV PAR2 0.6.14
 
