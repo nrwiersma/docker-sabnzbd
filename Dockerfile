@@ -1,39 +1,25 @@
-FROM alpine:3.8
+FROM debian:buster
 MAINTAINER Nicholas Wiersma <nick@wiersma.co.za>
 
-ENV VERSION 2.3.5
-ENV CHEETAH 2.4.4
-ENV PAR2 0.6.14
-
-# Create user and group for SABnzbd.
-RUN addgroup -S -g 666 sabnzbd \
-    && adduser -S -u 666 -G sabnzbd -h /sabnzbd -s /bin/sh sabnzbd
+ENV VERSION 3.3.1
 
 # Install Dependencies
-RUN apk add --no-cache ca-certificates py-six py-cryptography py-enum34 \
-                       py-cffi py-openssl openssl unzip unrar p7zip python \
-                       py-pip \
-    && wget -O- https://codeload.github.com/sabnzbd/sabnzbd/tar.gz/$VERSION | tar -zx \
-    && mv sabnzbd-*/* sabnzbd \
-    && wget -O- https://pypi.python.org/packages/source/C/Cheetah/Cheetah-$CHEETAH.tar.gz | tar -zx \
-    && cd Cheetah-$CHEETAH \
-    && python setup.py install \
-    && cd .. \
-    && rm -rf Cheetah-$CHEETAH
+RUN export DEBIAN_FRONTEND=noninteractive \
+    && sed -i "s#deb http://deb.debian.org/debian buster main#deb http://deb.debian.org/debian buster main non-free#g" /etc/apt/sources.list \
+    && apt-get -q update \
+    && apt-get install -qqy python3-pip python3-openssl p7zip-full par2 unrar unzip python3 openssl ca-certificates wget \
+    && /usr/bin/update-alternatives --install /usr/bin/python python /usr/bin/python3 1 \
+    && apt-get -y autoremove \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apk add --no-cache build-base automake autoconf python-dev \
-    && wget -O- https://github.com/Parchive/par2cmdline/archive/v$PAR2.tar.gz | tar -zx \
-    && cd par2cmdline-$PAR2 \
-    && aclocal \
-    && automake --add-missing \
-    && autoconf \
-    && ./configure \
-    && make \
-    && make install \
-    && cd .. \
-    && rm -rf par2cmdline-$PAR2 \
-    && pip --no-cache-dir install --upgrade sabyenc \
-    && apk del build-base automake autoconf python-dev
+# Create user and group for SABnzbd.
+RUN addgroup --system --gid 666 sabnzbd \
+    && adduser --system --uid 666 --ingroup sabnzbd --home /sabnzbd --shell /bin/sh sabnzbd
+
+# Install Sabnzbd
+RUN wget -O- https://codeload.github.com/sabnzbd/sabnzbd/tar.gz/$VERSION | tar -xz \
+    && mv sabnzbd-*/* /sabnzbd \
+    && python3 -m pip install -r /sabnzbd/requirements.txt
 
 # Add SABnzbd init script.
 ADD entrypoint.sh /entrypoint.sh
