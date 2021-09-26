@@ -1,7 +1,7 @@
 FROM debian:buster
 MAINTAINER Nicholas Wiersma <nick@wiersma.co.za>
 
-ENV VERSION 3.3.1
+ENV VERSION 3.4.0
 
 # Install Dependencies
 RUN export DEBIAN_FRONTEND=noninteractive \
