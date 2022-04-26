@@ -11,7 +11,7 @@ RUN addgroup --system --gid 666 sabnzbd \
 RUN export DEBIAN_FRONTEND=noninteractive \
     && sed -i "s#deb http://deb.debian.org/debian buster main#deb http://deb.debian.org/debian buster main non-free#g" /etc/apt/sources.list \
     && apt-get -q update \
-    && apt-get install -qqy python3-pip python3-openssl libffi-dev libssl-dev p7zip-full par2 unrar unzip python3 rustc openssl ca-certificates wget \
+    && apt-get install -qqy python3-setuptools python3-pip python3-openssl libffi-dev libssl-dev p7zip-full par2 unrar unzip python3 rustc openssl ca-certificates wget \
     && /usr/bin/update-alternatives --install /usr/bin/python python /usr/bin/python3 1 \
     && wget -O- https://codeload.github.com/sabnzbd/sabnzbd/tar.gz/$VERSION | tar -xz \
     && mv sabnzbd-*/* /sabnzbd \
