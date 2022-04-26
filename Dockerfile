@@ -16,7 +16,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && wget -O- https://codeload.github.com/sabnzbd/sabnzbd/tar.gz/$VERSION | tar -xz \
     && mv sabnzbd-*/* /sabnzbd \
     && python3 -m pip install -r /sabnzbd/requirements.txt \
-    && apt-get remove rustc \
+    && apt-get -y remove rustc \
     && apt-get -y autoremove \
     && rm -rf /var/lib/apt/lists/*
 
