@@ -1,7 +1,7 @@
 FROM debian:buster
 MAINTAINER Nicholas Wiersma <nick@wiersma.co.za>
 
-ENV VERSION 3.5.3
+ENV VERSION 3.6.0
 
 # Create user and group for SABnzbd.
 RUN addgroup --system --gid 666 sabnzbd \
